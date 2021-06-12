@@ -11,6 +11,7 @@ const bodyParser = require('body-parser')
 // ROUTERS
 const indexRouter = require('./routes/index')
 const companiesRouter = require('./routes/companies')
+const carsRouter = require('./routes/cars')
 
 // const profileRouter = require('./routes/profile')
 // const guestRouter = require('./routes/guests')
@@ -34,6 +35,7 @@ db.once('open', () => console.log('Connected to Mongoose'))
 
 app.use('/', indexRouter)
 app.use('/companies', companiesRouter)
+app.use('/cars', carsRouter)
 
 //Sever listens to...
 const port = process.env.PORT

@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const Company = require('../models/companies')
 
-// All Authors Route
+// All Companies Route
 router.get('/', async (req, res) => {
   let searchOptions = {}
   if (req.query.name != null && req.query.name !== '') {

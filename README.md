@@ -1,3 +1,3 @@
 # Maria
 
-New Web Project
+New Web project called Maria. It consists of a MongoDB database.

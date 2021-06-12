@@ -1,0 +1,28 @@
+{
+  "name": "maria",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GopnikRobinHood/Maria.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GopnikRobinHood/Maria/issues"
+  },
+  "homepage": "https://github.com/GopnikRobinHood/Maria#readme",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7",
+    "stripe": "^8.154.0"
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0"
+  }
+}

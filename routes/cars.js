@@ -16,7 +16,25 @@ const upload = multer({
 
 // All Cars Route
 router.get('/', async (req, res) => {
-  res.send('All cars')
+  let query = Car.find()
+  if (req.query.model != null && req.query.model != '') {
+    query = query.regex('model', new RegExp(req.query.model, 'i'))
+  }
+  if (req.query.publishedBefore != null && req.query.publishedBefore != '') {
+    query = query.lte('releaseDate', req.query.publishedBefore)
+  }
+  if (req.query.publishedAfter != null && req.query.publishedAfter != '') {
+    query = query.gte('releaseDate', req.query.publishedAfter)
+  }
+  try {
+    const cars = await query.exec()
+    res.render('cars/index', {
+      cars: cars,
+      searchOptions: req.query
+    })
+  } catch {
+    res.redirect('/')
+  }
 })
 
 // New Car Route
@@ -26,21 +44,27 @@ router.get('/new', async (req, res) => {
 
 // Create Car Route
 router.post('/', upload.single('image'), async (req, res) => {
-  const filename = req.file !=null ? req.file.filename : null
+  console.log('Processing...')
+  const fileName = req.file != null ? req.file.filename : null
   const car = new Car({
     model: req.body.model,
     company: req.body.company,
     releaseDate: new Date(req.body.releaseDate),
     PS: req.body.PS,
-    imageName: filename,
+    imageName: fileName,
     description: req.body.description
   })
+  console.log('Car created...')
+  //saveCover(car, req.body.cover)
 
   try{
+    console.log('Trying to safe car...')
     const newCar = await car.save()
     res.redirect(`cars`)
+    console.log('Car safed!')
   } catch {
     renderNewPage(res, car, true)
+    console.log('Error creating car!')
   }
 
 })
@@ -55,11 +79,21 @@ async function renderNewPage(res, car, hasError = false){
 
     if (hasError) params.errorMessage = 'Error creating car'
     res.render('cars/new', params)
-  } catch {
+  } catch (err){
+    console.log(err)
     res.redirect('/cars')
 
   }
 }
+
+// function saveCover(car, coverEncoded) {
+//   if (coverEncoded == null) return
+//   const cover = JSON.parse(coverEncoded)
+//   if (cover != null && imageMimeTypes.includes(cover.type)) {
+//     car.coverImage = new Buffer.from(cover.data, 'base64')
+//     car.coverImageType = cover.type
+//   }
+// }
 
 
 module.exports = router

@@ -1,7 +1,5 @@
 const mongoose = require('mongoose')
-
 const imageBasePath = 'uploads/carCovers'
-
 
 const carSchema = new mongoose.Schema({
     
@@ -25,7 +23,7 @@ const carSchema = new mongoose.Schema({
     required: true,
     default: Date.now
   },
-  ImageName:{
+  imageName:{
     type: String,
     required: true
   },

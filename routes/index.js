@@ -9,7 +9,6 @@ router.get('/', async (req, res) => {
   } catch {
     cars = []
   }
-  console.log(cars)
   res.render('index', {cars: cars})
  
 })

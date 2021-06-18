@@ -1,8 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const Car = require('../models/cars')
-const path = require('path')
-const fs = require('fs')
 const Company = require('../models/companies')
 const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif']
 

@@ -1,8 +1,17 @@
 const express = require('express')
 const router = express.Router()
+const Car = require('../models/cars')
 
-router.get('/', (req, res) => {
-  res.render('index')
+router.get('/', async (req, res) => {
+  let cars 
+  try{
+    cars = await Car.find().sort({ createdAt: 'desc'}).limit(3).exec()
+  } catch {
+    cars = []
+  }
+  console.log(cars)
+  res.render('index', {cars: cars})
+ 
 })
 
 module.exports = router

@@ -1,8 +1,9 @@
 const mongoose = require('mongoose')
 const imageBasePath = 'uploads/carCovers'
+const path = require('path')
 
-const carSchema = new mongoose.Schema({
-    
+
+const carSchema = new mongoose.Schema({   
   model: {
     type: String,
     required: true
@@ -33,8 +34,16 @@ const carSchema = new mongoose.Schema({
     required: true,
     ref: 'Company'
   }
-
 })
+
+
+carSchema.virtual('imagePath').get(function(){
+  
+  if(this.imageName != null){
+    return path.join('/', imageBasePath, this.imageName)
+  }
+})
+
 
 module.exports = mongoose.model('Car', carSchema)
 module.exports.imageBasePath = imageBasePath

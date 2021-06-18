@@ -3,9 +3,10 @@ const router = express.Router()
 const multer = require('multer')
 const Car = require('../models/cars')
 const path = require('path')
+const fs = require('fs')
 const uploadPath = path.join('public', Car.imageBasePath)
 const Company = require('../models/companies')
-const imageMimeTypes = ['image/jpeg', 'image/png', 'images/gif']
+const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif']
 
 const upload = multer({
   dest: uploadPath,
@@ -46,6 +47,7 @@ router.get('/new', async (req, res) => {
 router.post('/', upload.single('image'), async (req, res) => {
   console.log('Processing...')
   const fileName = req.file != null ? req.file.filename : null
+  console.log(fileName)
   const car = new Car({
     model: req.body.model,
     company: req.body.company,
@@ -54,17 +56,17 @@ router.post('/', upload.single('image'), async (req, res) => {
     imageName: fileName,
     description: req.body.description
   })
-  console.log('Car created...')
   //saveCover(car, req.body.cover)
 
   try{
-    console.log('Trying to safe car...')
     const newCar = await car.save()
+    //console.log(carImagePath)
     res.redirect(`cars`)
-    console.log('Car safed!')
   } catch {
+    if (car.carImageName != null) {
+      removeCarImage(car.carImageName)
+    }
     renderNewPage(res, car, true)
-    console.log('Error creating car!')
   }
 
 })
@@ -84,6 +86,13 @@ async function renderNewPage(res, car, hasError = false){
     res.redirect('/cars')
 
   }
+}
+
+
+function removeCarImage(fileName) {
+  fs.unlink(path.join(uploadPath, fileName), err => {
+    if (err) console.error(err)
+  })
 }
 
 // function saveCover(car, coverEncoded) {

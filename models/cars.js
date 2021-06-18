@@ -1,7 +1,4 @@
 const mongoose = require('mongoose')
-const imageBasePath = 'uploads/carCovers'
-const path = require('path')
-
 
 const carSchema = new mongoose.Schema({   
   model: {
@@ -24,7 +21,12 @@ const carSchema = new mongoose.Schema({
     required: true,
     default: Date.now
   },
-  imageName:{
+  image:{
+    type: Buffer,
+    required: true
+  },
+
+  imageType:{
     type: String,
     required: true
   },
@@ -39,11 +41,10 @@ const carSchema = new mongoose.Schema({
 
 carSchema.virtual('imagePath').get(function(){
   
-  if(this.imageName != null){
-    return path.join('/', imageBasePath, this.imageName)
+  if(this.image != null && this.imageType != null){
+    return `data:${this.imageType};charset=utf8;base64,${this.image.toString('base64')}`
   }
 })
 
 
 module.exports = mongoose.model('Car', carSchema)
-module.exports.imageBasePath = imageBasePath

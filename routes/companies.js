@@ -41,4 +41,27 @@ router.post('/', async (req, res) => {
   }
 })
 
+router.get('/:id', (req, res) => {
+  res.send('Show company ' + req.params.id)
+})
+
+router.get('/:id/edit', async (req,res) => {
+  try{
+  const company = await Company.findById(req.params.id)
+  res.render('companies/edit', { company: company })
+  } catch {
+    res.redirect('/companies')
+  }
+  
+})
+
+router.put('/:id', (req, res) => {
+  res.send('Update company ' + req.params.id)
+})
+
+router.delete('/:id', (req, res) => {
+  res.send('Delete company ' + req.params.id)
+})
+
+
 module.exports = router

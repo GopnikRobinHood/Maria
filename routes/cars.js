@@ -35,9 +35,7 @@ router.get('/new', async (req, res) => {
 
 // Create Car Route
 router.post('/', async (req, res) => {
-  console.log('Processing...')
   const fileName = req.file != null ? req.file.filename : null
-  console.log(fileName)
   const car = new Car({
     model: req.body.model,
     company: req.body.company,
@@ -49,7 +47,6 @@ router.post('/', async (req, res) => {
 
   try{
     const newCar = await car.save()
-    //console.log(carImagePath)
     res.redirect(`cars`)
   } catch {
     renderNewPage(res, car, true)
@@ -67,8 +64,7 @@ async function renderNewPage(res, car, hasError = false){
 
     if (hasError) params.errorMessage = 'Error creating car'
     res.render('cars/new', params)
-  } catch (err){
-    console.log(err)
+  } catch{
     res.redirect('/cars')
 
   }

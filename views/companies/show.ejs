@@ -1,0 +1,12 @@
+<h2><%=company.name %></h2>
+<a href="/company/<%=company.id %>/edit">Edit</a>
+<%- include('../partials/deleteForm', {url: `/companies/${company.id}`}) %>
+
+<% if (carsByCompany.length  > 0 ){%>
+    <h2>Cars from this company</h2>
+    <% carsByCompany.forEach(car => { %>
+    <div><%= car.model %></div>
+    <img height="150" width="100" src="<%= car.imagePath %>">
+
+  <% }) %>
+<% }%>

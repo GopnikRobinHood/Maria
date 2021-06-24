@@ -33,6 +33,18 @@ router.get('/new', async (req, res) => {
     renderNewPage(res, new Car())
 })
 
+//Show car
+router.get('/:id', async (req, res) => {
+  try{
+    const car = await Car.findById(req.params.id).populate('company').exec()
+    res.render('cars/show', {car: car})
+  } catch {
+    res.redirect('/')
+  }
+  
+})
+
+
 // Create Car Route
 router.post('/', async (req, res) => {
   const fileName = req.file != null ? req.file.filename : null
@@ -43,35 +55,99 @@ router.post('/', async (req, res) => {
     PS: req.body.PS,
     description: req.body.description
   })
-  saveCover(car, req.body.image)
+  saveImage(car, req.body.image)
 
   try{
     const newCar = await car.save()
-    res.redirect(`cars`)
+    res.redirect(`cars/${newCar.id}`)
   } catch {
     renderNewPage(res, car, true)
   }
-
 })
 
+//Edit Car Route
+router.get('/:id/edit', async (req, res) => {
+  try{
+    const car = await Car.findById(req.params.id)
+    renderEditPage(res, car)
+  } catch {
+    res.redirect('/')
+  }
+  
+})
+
+//Upload Car Route
+router.put('/:id', async (req, res) => {
+  let car
+  try{
+    const car = await Car.findById(req.params.id)
+    
+    car.model = req.body.model    
+    car.description = req.body.description
+    car.releaseDate = req.body.releaseDate
+    car.PS = req.body.PS
+    car.company = req.body.company
+    if(req.body.image != null && req.body.image != ''){
+      saveImage(car, req.body.image)
+    }
+
+  res.redirect(`/cars/${car.id}`)
+  await car.save()
+  } catch{
+    if (car != null){
+      renderEditPage(res, car, true)
+    } else{
+      res.redirect('/')
+    }
+  }
+})
+
+//Delete Car Route
+router.delete('/:id', async (req, res) => {
+  let car
+  try {
+    car = await Car.findById(req.params.id)
+    await car.remove()
+    res.redirect('/cars')
+  } catch {
+    if (car != null){
+      res.render('cars/show',{
+        car: car,
+        errorMessage: 'Could not remove car'
+      })
+    } else {
+      res.redirect('/')
+    }
+  }
+})
+
+
+
+
 async function renderNewPage(res, car, hasError = false){
+  renderFormPage(res, car, 'new', hasError)
+}
+
+async function renderEditPage(res, car, hasError = false){
+  renderFormPage(res, car, 'edit', hasError)
+}
+
+async function renderFormPage(res, car, form, hasError = false){
   try {
     const companies = await Company.find({})
     const params = {
       companies: companies,
       car: car
     }
-
     if (hasError) params.errorMessage = 'Error creating car'
-    res.render('cars/new', params)
+    res.render(`cars/${form}`, params)
   } catch{
     res.redirect('/cars')
 
   }
 }
 
-
-function saveCover(car, imageEncoded) {
+function saveImage(car, imageEncoded) {
   if (imageEncoded == null) return
   const image = JSON.parse(imageEncoded)
   if (image != null && imageMimeTypes.includes(image.type)) {

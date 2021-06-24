@@ -1,0 +1,12 @@
+<h2><%=car.model%></h2>
+
+<img height="150" width="100" src="<%= car.imagePath %>">
+
+<div>Company: <%=car.company.name%></div>
+<div>Release Date: <%=car.createdAt.toDateString()%></div>
+<div>PS: <%=car.PS%></div>
+<div>Description: <%=car.description%></div>
+
+<a href="/cars/<%=car.id%>/edit">Edit</a>
+<%- include('../partials/deleteForm', {url: `/cars/${car.id}`}) %>
+<a href="/companies/<%=car.company.id%>">View Company</a>

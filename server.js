@@ -9,7 +9,7 @@ const expressLayouts = require('express-ejs-layouts')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 const jwt = require('jsonwebtoken')
-
+const cookieParser=require('cookie-parser')
 
 // ROUTERS
 const indexRouter = require('./routes/index')
@@ -26,7 +26,7 @@ app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: false }))
 app.use(methodOverride('_method'))
 app.use(express.json())
-
+app.use(cookieParser())
 
 //Connect to MongoDB
 const mongoose = require('mongoose')

@@ -4,17 +4,18 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const User = require('../models/users')
 const Car = require('../models/cars')
+//authenticateToken = require('../public/javascripts/authenticateToken')
 
 //Private Route
-router.get('/', async (req, res) => {
-  let cars 
+router.get('/', authenticateToken, async (req, res) => {
+  console.log(req.user.name)
+  let cars
   try{
     cars = await Car.find().sort({ createdAt: 'desc'}).limit(3).exec()
   } catch {
     cars = []
   }
   res.render('index', {cars: cars})
- 
 })
 
 //Get all users
@@ -23,6 +24,12 @@ router.get('/users', async (req, res) => {
   res.send(users)
   //res.render('login.ejs', {messages: "hello"})
 })
+
+//Get all users
+router.get('/users/login', async (req, res) => {
+  res.render('login.ejs', {messages: ""})
+})
+
 
 //Create new user
 router.post('/users', async (req, res) => {
@@ -51,24 +58,34 @@ router.post('/users/login', async (req, res) => {
     if (!user) return res.status(404).send('No user found')
 
     //Ceck if pw is right
-    var passwordIsValid = await bcrypt.compare(req.body.password, user.password);
-    if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
+    var passwordIsValid = await bcrypt.compare(req.body.password, user.password)
+    if (!passwordIsValid) return res.status(401).send({ auth: false, token: null })
       
     //Create token
-    var token = jwt.sign({ _id: user._id }, process.env.ACCES_TOKEN_SECRET, {
-      expiresIn: 86400 // expires in 24 hours
+    var token = jwt.sign({ _id: user._id, name: user.name }, process.env.ACCES_TOKEN_SECRET, {
+      expiresIn: '20s' // expires in 24 hours
     });
       
     //Send token
-    res.status(200).header('authorization','Bearer '+ token).send({ auth: true, token: token });
-  }catch{
+    res.cookie('authorization', 'Bearer '+ token, {httpOnly: true})
+    res.redirect('/')
+
+  }catch(err){
     if (err) return res.status(500).send('Error on the server')
   }
 })
 
+
+//Logout
+router.delete('/users/logout', async(req, res)=>{
+      //Send token
+      res.cookie('authorization', 'expired', {httpOnly: true})
+      res.redirect('/users/login')
+})
+
 //Authenticate Token
 function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization']
+  const authHeader = req.cookies.authorization
   const token = authHeader && authHeader.split(' ')[1]
   if (token == null) return  res.sendStatus(401)
 
@@ -77,7 +94,6 @@ function authenticateToken(req, res, next) {
       req.user = user
       next()
   })
-  
 }
 
 module.exports = router

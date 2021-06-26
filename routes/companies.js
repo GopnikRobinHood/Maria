@@ -2,9 +2,10 @@ const express = require('express')
 const router = express.Router()
 const Company = require('../models/companies')
 const Car = require('../models/cars')
+const jwt = require('jsonwebtoken')
 
 // All Companies Route
-router.get('/', async (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
   let searchOptions = {}
   if (req.query.name != null && req.query.name !== '') {
     searchOptions.name = new RegExp(req.query.name, 'i')
@@ -21,7 +22,7 @@ router.get('/', async (req, res) => {
 })
 
 // New Company Route
-router.get('/new', (req, res) => {
+router.get('/new',authenticateToken, (req, res) => {
   res.render('companies/new', { company: new Company() })
 })
 
@@ -105,5 +106,17 @@ router.delete('/:id', async (req, res) => {
   }
 })
 
+//Authenticate Token
+function authenticateToken(req, res, next) {
+  const authHeader = req.cookies.authorization
+  const token = authHeader && authHeader.split(' ')[1]
+  if (token == null) return  res.sendStatus(401)
+
+  jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err, user) =>{
+      if (err) return res.sendStatus(403)
+      req.user = user
+      next()
+  })
+}
 
 module.exports = router

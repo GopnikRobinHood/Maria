@@ -8,14 +8,14 @@ const app = express()
 const expressLayouts = require('express-ejs-layouts')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
+const jwt = require('jsonwebtoken')
+
 
 // ROUTERS
 const indexRouter = require('./routes/index')
 const companiesRouter = require('./routes/companies')
 const carsRouter = require('./routes/cars')
 
-// const profileRouter = require('./routes/profile')
-// const guestRouter = require('./routes/guests')
 
 //Views
 app.set('view engine', 'ejs')
@@ -25,6 +25,8 @@ app.use(expressLayouts)
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: false }))
 app.use(methodOverride('_method'))
+app.use(express.json())
+
 
 //Connect to MongoDB
 const mongoose = require('mongoose')

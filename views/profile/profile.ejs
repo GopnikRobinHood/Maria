@@ -1,0 +1,15 @@
+<h2 class="page-header">User Profile</h2>
+<P><%=message%></P>
+<div class="text">
+    <ul>
+        <li>Name: <%= user.name %></li>
+        <li>E-Mail: <%= user.email %></li>
+        <li>Created at: <%= (user.createdAt).toDateString() %></li>
+        <li>Last updated at: <%= (user.updatedAt).toDateString() %></li>
+    </ul>
+</div>
+
+<div class="btn-row">
+    <a href="/profile/changePassword" class="btn btn-primary">Change password</a>
+    <!-- <button type="submit" class="btn btn-primary">Update</button> -->
+</div>

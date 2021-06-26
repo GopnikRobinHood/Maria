@@ -2,7 +2,7 @@
 
 New Web project called Maria. It consists of a MongoDB database and will be deployed to Heroku. The images shown are stored in a database as encoded string.
 
-# To Do:
+## To Do:
 
 * add refresh token
 * export authenticate Token function

@@ -2,13 +2,26 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+
+const passport = require('passport')
+const LocalStrategy = require('passport-local').Strategy
 const User = require('../models/users')
 const Car = require('../models/cars')
-//authenticateToken = require('../public/javascripts/authenticateToken')
+const initializePassport = require('../public/javascripts/passport-config')
 
-//Private Route
-router.get('/', authenticateToken, async (req, res) => {
-  console.log(req.user.name)
+
+initializePassport(
+  passport,
+  allUsers()
+)
+
+//Ich suche hier schon alle User, bekomme aber nur ein Promise
+async function allUsers() {
+  return await User.find({}).exec()
+  }
+
+
+router.get('/', async (req, res) => {
   let cars
   try{
     cars = await Car.find().sort({ createdAt: 'desc'}).limit(3).exec()
@@ -18,18 +31,17 @@ router.get('/', authenticateToken, async (req, res) => {
   res.render('index', {cars: cars})
 })
 
+
 //Get all users
 router.get('/users', async (req, res) => {
   const users = await User.find({})
   res.send(users)
-  //res.render('login.ejs', {messages: "hello"})
 })
 
-//Get all users
+//Get Login page
 router.get('/users/login', async (req, res) => {
-  res.render('login.ejs', {messages: ""})
+  res.render('login.ejs')
 })
-
 
 //Create new user
 router.post('/users', async (req, res) => {
@@ -38,6 +50,7 @@ router.post('/users', async (req, res) => {
 
     const user = new User({
       name: req.body.name,
+      email: req.body.email,
       password: hashedPassword
     })
 
@@ -49,51 +62,58 @@ router.post('/users', async (req, res) => {
 })
 
 //Login
-router.post('/users/login', async (req, res) => {
-  try{
-    //Get user
-    const user = await User.findOne({name: req.body.name})
+router.post('/users/login', passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/users/login',
+  failureFlash: true
+}))
 
-    //Check if user is in db
-    if (!user) return res.status(404).send('No user found')
 
-    //Ceck if pw is right
-    var passwordIsValid = await bcrypt.compare(req.body.password, user.password)
-    if (!passwordIsValid) return res.status(401).send({ auth: false, token: null })
+// router.post('/users/login', async (req, res) => {
+//   try{
+
+//     //Get user
+//     const user = await User.findOne({email: req.body.email})
+
+//     //Check if user is in db
+//     if (!user) return res.status(404).send('No user found')
+
+//     //Check if pw is right
+//     var passwordIsValid = await bcrypt.compare(req.body.password, user.password)
+//     if (!passwordIsValid) return res.status(401).send({ auth: false, token: null })
       
-    //Create token
-    var token = jwt.sign({ _id: user._id, name: user.name }, process.env.ACCES_TOKEN_SECRET, {
-      expiresIn: '20s' // expires in 24 hours
-    });
-      
-    //Send token
-    res.cookie('authorization', 'Bearer '+ token, {httpOnly: true})
-    res.redirect('/')
+//     // //Create token
+//     // var token = jwt.sign({ _id: user._id, name: user.name, email: user.email }, process.env.ACCES_TOKEN_SECRET, {
+//     //   expiresIn: '20s' // expires in 24 hours
+//     // });
+    
+//     res.status(200).send('OK')
 
-  }catch(err){
-    if (err) return res.status(500).send('Error on the server')
-  }
-})
+//   }catch(err){
+//     res.status(500).send(err)
+//   }
+// })
 
 
 //Logout
 router.delete('/users/logout', async(req, res)=>{
-      //Send token
+      
+  
+    //Send token
       res.cookie('authorization', 'expired', {httpOnly: true})
       res.redirect('/users/login')
+
+
+      //req.logOut()
 })
 
-//Authenticate Token
-function authenticateToken(req, res, next) {
-  const authHeader = req.cookies.authorization
-  const token = authHeader && authHeader.split(' ')[1]
-  if (token == null) return  res.sendStatus(401)
 
-  jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err, user) =>{
-      if (err) return res.sendStatus(403)
-      req.user = user
-      next()
-  })
-}
+router.delete('/:id', function (req, res) {
+  User.findByIdAndRemove(req.params.id, function (err, user) {
+      if (err) return res.status(500).send("There was a problem deleting the user.");
+      res.status(200).send("User: "+ user.name +" was deleted.");
+  });
+});
+
 
 module.exports = router

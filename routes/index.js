@@ -8,20 +8,16 @@ const LocalStrategy = require('passport-local').Strategy
 const User = require('../models/users')
 const Car = require('../models/cars')
 const initializePassport = require('../public/javascripts/passport-config')
+const authenticate = require('../public/javascripts/checkAuthenticated')
+const checkAuthenticated = authenticate.checkAuthenticated
+const checkNotAuthenticated = authenticate.checkNotAuthenticated
 
 
 initializePassport(
-  passport,
-  allUsers()
+  passport
 )
 
-//Ich suche hier schon alle User, bekomme aber nur ein Promise
-async function allUsers() {
-  return await User.find({}).exec()
-  }
-
-
-router.get('/', async (req, res) => {
+router.get('/',checkAuthenticated, async (req, res) => {
   let cars
   try{
     cars = await Car.find().sort({ createdAt: 'desc'}).limit(3).exec()
@@ -39,12 +35,17 @@ router.get('/users', async (req, res) => {
 })
 
 //Get Login page
-router.get('/users/login', async (req, res) => {
-  res.render('login.ejs')
+router.get('/login',checkNotAuthenticated, async (req, res) => {
+  res.render('login')
+})
+
+//Get Login page
+router.get('/register',checkNotAuthenticated, async (req, res) => {
+  res.render('register',{message: ''})
 })
 
 //Create new user
-router.post('/users', async (req, res) => {
+router.post('/register', checkNotAuthenticated, async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10)
 
@@ -55,65 +56,37 @@ router.post('/users', async (req, res) => {
     })
 
     const newUser = await user.save()
-    res.status(201).send('User created')
+    res.status(201).redirect('/login')
   } catch(err) {
-    res.status(500).send('Error on the server')
+    res.status(500).render('register', {message: err.message})
   }
 })
 
 //Login
-router.post('/users/login', passport.authenticate('local', {
+router.post('/login',checkNotAuthenticated, passport.authenticate('local', {
   successRedirect: '/',
-  failureRedirect: '/users/login',
+  failureRedirect: '/login',
   failureFlash: true
 }))
 
-
-// router.post('/users/login', async (req, res) => {
-//   try{
-
-//     //Get user
-//     const user = await User.findOne({email: req.body.email})
-
-//     //Check if user is in db
-//     if (!user) return res.status(404).send('No user found')
-
-//     //Check if pw is right
-//     var passwordIsValid = await bcrypt.compare(req.body.password, user.password)
-//     if (!passwordIsValid) return res.status(401).send({ auth: false, token: null })
-      
-//     // //Create token
-//     // var token = jwt.sign({ _id: user._id, name: user.name, email: user.email }, process.env.ACCES_TOKEN_SECRET, {
-//     //   expiresIn: '20s' // expires in 24 hours
-//     // });
-    
-//     res.status(200).send('OK')
-
-//   }catch(err){
-//     res.status(500).send(err)
-//   }
-// })
-
-
 //Logout
-router.delete('/users/logout', async(req, res)=>{
-      
-  
-    //Send token
-      res.cookie('authorization', 'expired', {httpOnly: true})
-      res.redirect('/users/login')
-
-
-      //req.logOut()
+router.delete('/logout', async(req, res)=>{
+  req.logOut()
+  res.redirect('/login')
+  // res.cookie('authorization', 'expired', {httpOnly: true})
 })
 
+//     //Create token
+//     var token = jwt.sign({ _id: user._id, name: user.name, email: user.email }, process.env.ACCES_TOKEN_SECRET, {
+//     expiresIn: '20s' // expires in 24 hours
+    
 
-router.delete('/:id', function (req, res) {
+//Delete User
+router.delete('/:id', checkAuthenticated, function (req, res) {
   User.findByIdAndRemove(req.params.id, function (err, user) {
       if (err) return res.status(500).send("There was a problem deleting the user.");
       res.status(200).send("User: "+ user.name +" was deleted.");
   });
 });
-
 
 module.exports = router

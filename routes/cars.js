@@ -4,9 +4,11 @@ const Car = require('../models/cars')
 const Company = require('../models/companies')
 const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif']
 
+const authenticate = require('../public/javascripts/checkAuthenticated')
+const checkAuthenticated = authenticate.checkAuthenticated
 
 // All Cars Route
-router.get('/', async (req, res) => {
+router.get('/', checkAuthenticated, async (req, res) => {
   let query = Car.find()
   if (req.query.model != null && req.query.model != '') {
     query = query.regex('model', new RegExp(req.query.model, 'i'))
@@ -29,12 +31,12 @@ router.get('/', async (req, res) => {
 })
 
 // New Car Route
-router.get('/new', async (req, res) => {
+router.get('/new', checkAuthenticated, async (req, res) => {
     renderNewPage(res, new Car())
 })
 
 //Show car
-router.get('/:id', async (req, res) => {
+router.get('/:id', checkAuthenticated, async (req, res) => {
   try{
     const car = await Car.findById(req.params.id).populate('company').exec()
     res.render('cars/show', {car: car})
@@ -46,7 +48,7 @@ router.get('/:id', async (req, res) => {
 
 
 // Create Car Route
-router.post('/', async (req, res) => {
+router.post('/', checkAuthenticated, async (req, res) => {
   const fileName = req.file != null ? req.file.filename : null
   const car = new Car({
     model: req.body.model,
@@ -66,7 +68,7 @@ router.post('/', async (req, res) => {
 })
 
 //Edit Car Route
-router.get('/:id/edit', async (req, res) => {
+router.get('/:id/edit', checkAuthenticated, async (req, res) => {
   try{
     const car = await Car.findById(req.params.id)
     renderEditPage(res, car)
@@ -77,7 +79,7 @@ router.get('/:id/edit', async (req, res) => {
 })
 
 //Upload Car Route
-router.put('/:id', async (req, res) => {
+router.put('/:id', checkAuthenticated, async (req, res) => {
   let car
   try{
     const car = await Car.findById(req.params.id)
@@ -103,7 +105,7 @@ router.put('/:id', async (req, res) => {
 })
 
 //Delete Car Route
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', checkAuthenticated, async (req, res) => {
   let car
   try {
     car = await Car.findById(req.params.id)

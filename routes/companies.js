@@ -4,8 +4,11 @@ const Company = require('../models/companies')
 const Car = require('../models/cars')
 const jwt = require('jsonwebtoken')
 
+const authenticate = require('../public/javascripts/checkAuthenticated')
+const checkAuthenticated = authenticate.checkAuthenticated
+
 // All Companies Route
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', checkAuthenticated, async (req, res) => {
   let searchOptions = {}
   if (req.query.name != null && req.query.name !== '') {
     searchOptions.name = new RegExp(req.query.name, 'i')
@@ -22,12 +25,12 @@ router.get('/', authenticateToken, async (req, res) => {
 })
 
 // New Company Route
-router.get('/new',authenticateToken, (req, res) => {
+router.get('/new', checkAuthenticated, (req, res) => {
   res.render('companies/new', { company: new Company() })
 })
 
 // Create new Company Route
-router.post('/', async (req, res) => {
+router.post('/', checkAuthenticated, async (req, res) => {
   const company = new Company({
     name: req.body.name
   })
@@ -44,7 +47,7 @@ router.post('/', async (req, res) => {
 })
 
 //Show company
-router.get('/:id', async (req, res) => {
+router.get('/:id', checkAuthenticated, async (req, res) => {
   //res.send('Show company ' + req.params.id)
   try{
     const company = await Company.findById(req.params.id)
@@ -57,7 +60,7 @@ router.get('/:id', async (req, res) => {
 })
 
 //Edit company
-router.get('/:id/edit', async (req,res) => {
+router.get('/:id/edit', checkAuthenticated, async (req,res) => {
   try{
   const company = await Company.findById(req.params.id)
   res.render('companies/edit', { company: company })
@@ -68,7 +71,7 @@ router.get('/:id/edit', async (req,res) => {
 })
 
 //Update company (after edit company)
-router.put('/:id', async (req, res) => {
+router.put('/:id', checkAuthenticated, async (req, res) => {
   let company
   try {
     company = await Company.findById(req.params.id)
@@ -90,7 +93,7 @@ router.put('/:id', async (req, res) => {
 
 
 //Delete company
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', checkAuthenticated, async (req, res) => {
   let company
   try {
     company = await Company.findById(req.params.id)
@@ -106,17 +109,5 @@ router.delete('/:id', async (req, res) => {
   }
 })
 
-//Authenticate Token
-function authenticateToken(req, res, next) {
-  const authHeader = req.cookies.authorization
-  const token = authHeader && authHeader.split(' ')[1]
-  if (token == null) return  res.sendStatus(401)
-
-  jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err, user) =>{
-      if (err) return res.sendStatus(403)
-      req.user = user
-      next()
-  })
-}
 
 module.exports = router

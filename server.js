@@ -8,7 +8,6 @@ const app = express()
 const expressLayouts = require('express-ejs-layouts')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
-//const jwt = require('jsonwebtoken')
 const cookieParser=require('cookie-parser')
 const passport = require('passport')
 const flash = require('express-flash')
@@ -52,4 +51,4 @@ app.use('/cars', carsRouter)
 
 //Sever listens to...
 const port = process.env.PORT
-app.listen(port, () => console.log('http://localhost:5000/users/login'));
+app.listen(port, () => console.log('http://localhost:5000'));

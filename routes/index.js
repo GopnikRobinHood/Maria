@@ -36,12 +36,12 @@ router.get('/users', async (req, res) => {
 
 //Get Login page
 router.get('/login',checkNotAuthenticated, async (req, res) => {
-  res.render('login')
+  res.render('login', {layout: './layouts/loginLayout.ejs'})
 })
 
 //Get Login page
 router.get('/register',checkNotAuthenticated, async (req, res) => {
-  res.render('register',{message: ''})
+  res.render('register',{message: '', layout: './layouts/loginLayout.ejs'})
 })
 
 //Create new user

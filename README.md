@@ -4,12 +4,5 @@ New Web project called Maria. It consists of a MongoDB database and will be depl
 
 ## To Do:
 
-* validation for creating users
-* add refresh token
-* export authenticate Token function
-* make routes private
-* if not logged in, redirect to login site
-* add registration for users
-* add e-mail
-* .env variables to Heroku
+* add JWS token for admin rights
 * add css

@@ -14,7 +14,8 @@ const checkNotAuthenticated = authenticate.checkNotAuthenticated
 
 
 initializePassport(
-  passport
+  passport,
+  'Test'
 )
 
 router.get('/',checkAuthenticated, async (req, res) => {

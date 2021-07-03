@@ -1,12 +1,12 @@
 <header>
-    <nav>
-      <a href="/">MyCars</a>
+    <nav class="header-nav">
+      <a class="header-title" href="/">MyCars</a>
       <ul>
         <li><a href="/companies">Companies</a></li>
         <li><a href="/companies/new">Add company</a></li>
         <li><a href="/cars">Cars</a></li>
         <li><a href="/cars/new">Add car</a></li>
+        <li><%- include ('logoutForm', {url:'/logout'})%></li>
       </ul>
-      <%- include ('logoutForm', {url:'/logout'})%>
     </nav>
   </header>

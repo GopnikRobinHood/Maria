@@ -1,7 +1,9 @@
-<h2>Edit Company</h2>
+<h2 class="page-header">Edit Company</h2>
 
-<form action="/companies/<%= company.id %>?_method=PUT" method="POST">
+<form id="form" action="/companies/<%= company.id %>?_method=PUT" method="POST">
   <%- include('_form_fields') %>
-  <a href="/companies/<%=company.id%>">Cancel</a>
-  <button type="submit">Update</button>
+  <div class="btn-row">
+    <a class="btn btn-primary" href="/companies/<%=company.id%>">Cancel</a>
+    <button class="btn btn-primary" type="submit">Update</button>
+  </div>
 </form>

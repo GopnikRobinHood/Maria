@@ -1,7 +1,9 @@
-<h2>New Company</h2>
+<h2 class="page-header">New Company</h2>
 
-<form action="/companies" method="POST">
+<form id="form" action="/companies" method="POST">
   <%- include('_form_fields') %>
-  <a href="/companies">Cancel</a>
-  <button type="submit">Create</button>
+  <div class="btn-row">
+    <a class="btn btn-primary" href="/companies">Cancel</a>
+    <button class="btn btn-primary" type="submit">Create</button>
+  </div>
 </form>

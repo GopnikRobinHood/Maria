@@ -17,6 +17,21 @@ initializePassport(
   passport
 )
 
+
+//Move this to Javascripts
+authRole =function(role, userData){ 
+  return async (req, res, next) => {
+    const id = req.session.passport.user
+    const allUsers = await userData
+    const user = allUsers.find(user => user.id === id)
+    if(role !== user.role){
+      return res.status(403).send('Permission denied!')
+    }
+    next()
+  }
+}
+
+
 router.get('/',checkAuthenticated, async (req, res) => {
   
   let cars
@@ -29,14 +44,14 @@ router.get('/',checkAuthenticated, async (req, res) => {
 })
 
 
-// //Get all users
+//Get all users
 // router.get('/users', async (req, res) => {
 //   const users = await User.find({})
 //   res.send(users)
 // })
 
 //Get Admin page
-router.get('/admin',checkAuthenticated, async (req, res) => {
+router.get('/admin',checkAuthenticated, authRole(ROLE.ADMIN, users), async (req, res) => {
   res.send('Admin')
 })
 
@@ -95,5 +110,7 @@ router.delete('/:id', checkAuthenticated, function (req, res) {
       res.status(200).send("User: "+ user.name +" was deleted.");
   });
 });
+
+
 
 module.exports = router

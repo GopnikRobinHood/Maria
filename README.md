@@ -4,5 +4,8 @@ New Web project called Maria. It consists of a MongoDB database and will be depl
 
 ## To Do:
 
-* add JWS token for admin rights
-* add css
+* just import users once. Send users to inititiate Passport and send users to the middelware 'checkRole' -> minimize amount of times the DB is used 
+* add roles
+* create admin page
+* log site activity
+* finish css

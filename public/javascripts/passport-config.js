@@ -3,8 +3,7 @@ const bcrypt = require('bcrypt')
 const User = require('../../models/users')
 
 
-async function initialize(passport, user) {
-  //console.log(user)
+async function initialize(passport) {
 
   const authenticateUser = async (email, password, done, users) => {
     try{
@@ -21,9 +20,11 @@ async function initialize(passport, user) {
       return done(null, false, { message: 'Something went wrong!' }) 
     }
   }
-
-  //desereializeUser ist garantiert falsch
-  const findUserById = (id) => id
+  
+  async function findUserById(id){
+    const users = await User.find({})
+    return users.find(user => user.id === id)
+  }
   
   passport.use(new LocalStrategy({ usernameField: 'email' }, authenticateUser))
   passport.serializeUser((user, done) => done(null, user.id))

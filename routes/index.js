@@ -4,7 +4,6 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
 const passport = require('passport')
-const LocalStrategy = require('passport-local').Strategy
 const User = require('../models/users')
 const Car = require('../models/cars')
 const initializePassport = require('../public/javascripts/passport-config')
@@ -12,13 +11,14 @@ const authenticate = require('../public/javascripts/checkAuthenticated')
 const checkAuthenticated = authenticate.checkAuthenticated
 const checkNotAuthenticated = authenticate.checkNotAuthenticated
 
+const { ROLE, users } = require('../public/javascripts/userData')
 
 initializePassport(
-  passport,
-  'Test'
+  passport
 )
 
 router.get('/',checkAuthenticated, async (req, res) => {
+  
   let cars
   try{
     cars = await Car.find().sort({ createdAt: 'desc'}).limit(3).exec()
@@ -29,10 +29,15 @@ router.get('/',checkAuthenticated, async (req, res) => {
 })
 
 
-//Get all users
-router.get('/users', async (req, res) => {
-  const users = await User.find({})
-  res.send(users)
+// //Get all users
+// router.get('/users', async (req, res) => {
+//   const users = await User.find({})
+//   res.send(users)
+// })
+
+//Get Admin page
+router.get('/admin',checkAuthenticated, async (req, res) => {
+  res.send('Admin')
 })
 
 //Get Login page
@@ -53,6 +58,7 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
     const user = new User({
       name: req.body.name,
       email: req.body.email,
+      role: 'admin',
       password: hashedPassword
     })
 

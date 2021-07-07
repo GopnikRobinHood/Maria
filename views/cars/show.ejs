@@ -7,6 +7,10 @@
 <div>PS: <%=car.PS%></div>
 <div>Description: <%=car.description%></div>
 
-<a href="/cars/<%=car.id%>/edit">Edit</a>
-<%- include('../partials/deleteForm', {url: `/cars/${car.id}`}) %>
-<a href="/companies/<%=car.company.id%>">View Company</a>
+<div class="btn-row">
+    <a class="btn btn-primary" href="/cars/<%=car.id%>/edit">Edit</a>
+    
+    <a class="btn btn-primary" href="/companies/<%=car.company.id%>">View Company</a>
+    <%- include('../partials/deleteForm', {url: `/cars/${car.id}`}) %>
+
+</div>

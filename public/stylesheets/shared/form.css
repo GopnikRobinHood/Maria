@@ -1,7 +1,14 @@
 :root{
+    --form-label-font-size: 1.2rem;
     --form-input-background-color: hsl(var(--color-base-hue), 100%, 31%);
     --form-input-border-color: hsl(var(--color-base-hue), 100%, 50%);
+    --form-input-border-color-light:hsl(var(--color-base-hue), 100%, 80%);
+}
 
+.form-row{
+    display: flex;
+    margin-bottom: .5rem;
+    margin-right: 70%;
 }
 
 .form-item{
@@ -10,8 +17,19 @@
     width: 20%;
     margin-left: 2rem;
     flex-grow: 1;
-    flex-basis: 1;
+    flex-basis: 0;
     margin-bottom: 1rem;
+}
+
+.form-item-no-grow {
+    flex-grow: 0;
+}
+
+.form-row-end{
+    justify-content: flex-end;
+}
+.form-item:first-child{
+    margin-left: 0;
 }
 
 .form-item > label {
@@ -31,4 +49,36 @@
     font-weight: normal;
     font-family: 'Montserrat', sans-serif;
     outline: none;
+}
+
+
+.form-item input:focus, .form-item select:focus, .form-item textarea:focus{
+    border-color: var(--form-input-border-color-light);
+}
+
+
+.form-item textarea{
+    height: 100%;
+    resize: none;
+}
+
+.form-item select option{
+    background-color: black;
+}
+
+.filepond--root {
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 0;
+}
+
+.filepond--panel-root{
+    background-color: var(--form-input-background-color);
+    border: 1px solid var(--form-input-border-color);
+
+}
+
+.filepond--drop-label{
+    color: var(--color-text-light);
+    font-size: inherit;
+
 }

@@ -1,11 +1,12 @@
-<div>
+<div class="form-row">
+
+  <div class = "form-item">
     <label>Model</label>
     <input type="text" name="model" value="<%= car.model %>">
-</div>
+  </div>
 
-<div>
+  <div class = "form-item">
     <label>Company</label>
-
     <select name="company">
         <% companies.forEach(company => { %>
           <% if (company.id === car.company) { %>
@@ -15,25 +16,34 @@
           <% } %>
         <% }) %>
         </select>
-
+  </div>
 </div>
 
-<div>
+<div class="form-row">
+  <div class = "form-item">
     <label>Release date</label>
     <input type="date" name="releaseDate" 
     value="<%= car.releaseDate == null ? '' : car.releaseDate.toISOString().split('T')[0] %>">
+  </div>
+  <div class = "form-item">
+      <label>PS</label>
+      <input type="number" name="PS" value="<%= car.PS %>" min="0">
+  </div>
 </div>
 
-<div>
-    <label>PS</label>
-    <input type="number" name="PS" value="<%= car.PS %>" min="0">
-</div>
+<div class="form-row">
 
-<div>
+  <div class="form-item form-item-no-grow">
     <label>Image</label>
     <input type="file" name="image" class="filepond">
-</div>
-<div>
+  </div>
+
+
+  <div class="form-item">
     <label>Description</label>
     <textarea name="description"><%= car.description %></textarea>
+  </div>
+
+
+
 </div>

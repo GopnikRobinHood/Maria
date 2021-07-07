@@ -1,19 +1,28 @@
-<h2>Search Car</h2>
+<h2 class="page-header">Search Car</h2>
 <form action="/cars" method="GET">
-  <div>
-    <label>Model</label>
-    <input type="text" name="model" value="<%= searchOptions.model %>">
+  <div class="form-row">
+    <div class="form-item">
+      <label>Model</label>
+      <input type="text" name="model" value="<%= searchOptions.model %>">
+    </div>
   </div>
-  <div>
-    <label>Published After</label>
-    <input type="date" name="publishedAfter" value="<%= searchOptions.publishedAfter %>">
+
+  <div class="form-row">
+    <div class="form-item">
+      <label>Published After</label>
+      <input type="date" name="publishedAfter" value="<%= searchOptions.publishedAfter %>">
+    </div>
+    <div class="form-item">
+      <label>Published Before</label>
+      <input type="date" name="publishedBefore" value="<%= searchOptions.publishedBefore %>">
+    </div>
   </div>
-  <div>
-    <label>Published Before</label>
-    <input type="date" name="publishedBefore" value="<%= searchOptions.publishedBefore %>">
+  
+  <div class="form-row form-row-end">
+    <button class="btn btn-primary" type="submit">Search</button>
   </div>
-  <button type="submit">Search</button>
 </form>
+
 <div>
   <% cars.forEach(car => { %>
     <a href="/cars/<%=car.id%>"> <img height="150" width="100" src="<%= car.imagePath %>"></a>

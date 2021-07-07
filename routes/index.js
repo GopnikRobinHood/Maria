@@ -22,7 +22,9 @@ initializePassport(
 authRole =function(role, userData){ 
   return async (req, res, next) => {
     const id = req.session.passport.user
-    const allUsers = await userData
+    const allUsers = await User.find({}) 
+    //need to load user data like this, else new users are not yet available
+
     const user = allUsers.find(user => user.id === id)
     if(role !== user.role){
       return res.status(403).send('Permission denied!')
@@ -45,10 +47,10 @@ router.get('/',checkAuthenticated, async (req, res) => {
 
 
 //Get all users
-// router.get('/users', async (req, res) => {
-//   const users = await User.find({})
-//   res.send(users)
-// })
+router.get('/users',checkAuthenticated, async (req, res) => {
+  const users = await User.find({})
+  res.send(users)
+})
 
 //Get Admin page
 router.get('/admin',checkAuthenticated, authRole(ROLE.ADMIN, users), async (req, res) => {
@@ -73,7 +75,7 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
     const user = new User({
       name: req.body.name,
       email: req.body.email,
-      role: 'admin',
+      role: ROLE.BASIC,
       password: hashedPassword
     })
 

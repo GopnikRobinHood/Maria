@@ -1,15 +1,15 @@
 <h2 class="page-header"><%=company.name %></h2>
+
 <div class="btn-row">
-<a class="btn btn-primary" href="/company/<%=company.id %>/edit">Edit</a>
-<%- include('../partials/deleteForm', {url: `/companies/${company.id}`}) %>
+  <a class="btn btn-primary" href="/companies/<%=company.id %>/edit">Edit</a>
+  <%- include('../partials/deleteForm', {url: `/companies/${company.id}`}) %>
 </div>
 
-
 <% if (carsByCompany.length  > 0 ){%>
-    <h2>Cars from this company</h2>
-    <% carsByCompany.forEach(car => { %>
-    <div><%= car.model %></div>
-    <img height="150" width="100" src="<%= car.imagePath %>">
-
+    <h2 class="page-header">Cars from this company</h2>
+      <% carsByCompany.forEach(car => { %>
+      <div><%= car.model %></div>
+      <a href="/cars/<%=car.id%>"><img height="150" width="100" src="<%= car.imagePath %>"></a>
+      
   <% }) %>
 <% }%>

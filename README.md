@@ -8,4 +8,4 @@ New Web project called Maria. It consists of a MongoDB database and is  deployed
 * create admin page
 * give user roles
 * log site activity
-* finish css
+* adapt css

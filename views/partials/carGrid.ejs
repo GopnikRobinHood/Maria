@@ -1,0 +1,13 @@
+
+<% carImageClass = locals.large ? 'car-image-large' : ''%>
+<% carGridClass = locals.large ? 'car-grid-large' : ''%>
+
+<div class="car-grid <%= carGridClass %>">
+    <% cars.forEach(car => { %>
+        <!-- <div><%= car.model %></div> -->
+        <a href="/cars/<%=car.id%>">
+            <img class="car-image <%= carImageClass %>"  
+            src="<%= car.imagePath %>">
+        </a>
+    <% }) %>
+</div>

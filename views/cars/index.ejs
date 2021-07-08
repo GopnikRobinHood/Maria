@@ -22,9 +22,7 @@
     <button class="btn btn-primary" type="submit">Search</button>
   </div>
 </form>
-
+<br>
 <div>
-  <% cars.forEach(car => { %>
-    <a href="/cars/<%=car.id%>"> <img height="150" width="100" src="<%= car.imagePath %>"></a>
-  <% }) %>
+  <%- include('../partials/carGrid.ejs', {cars: cars}) %>
 </div>

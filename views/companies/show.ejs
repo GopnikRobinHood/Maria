@@ -7,9 +7,5 @@
 
 <% if (carsByCompany.length  > 0 ){%>
     <h2 class="page-header">Cars from this company</h2>
-      <% carsByCompany.forEach(car => { %>
-      <div><%= car.model %></div>
-      <a href="/cars/<%=car.id%>"><img height="150" width="100" src="<%= car.imagePath %>"></a>
-      
-  <% }) %>
+<%- include('../partials/carGrid.ejs', {cars: carsByCompany}) %>
 <% }%>

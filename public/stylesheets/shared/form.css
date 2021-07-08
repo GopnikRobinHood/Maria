@@ -8,7 +8,7 @@
 .form-row{
     display: flex;
     margin-bottom: .5rem;
-    margin-right: 70%;
+    /* margin-right: 70%; */
 }
 
 .form-item{

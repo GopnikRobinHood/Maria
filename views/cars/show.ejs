@@ -1,16 +1,27 @@
 <h2><%=car.model%></h2>
+<div class="car-details">
 
-<img height="150" width="100" src="<%= car.imagePath %>">
+    <div>
+        <img class="car-image" src="<%= car.imagePath %>">
 
-<div>Company: <%=car.company.name%></div>
-<div>Release Date: <%=car.createdAt.toDateString()%></div>
-<div>PS: <%=car.PS%></div>
-<div>Description: <%=car.description%></div>
+        <div class="car-details-btn-grid">
+            <a class="btn btn-primary" href="/cars/<%=car.id%>/edit">Edit</a>   
+            <a class="btn btn-primary car-details-company-button" href="/companies/<%=car.company.id%>">
+                View Company
+            </a>
+            <%- include('../partials/deleteForm', {url: `/cars/${car.id}`}) %>
+        </div>
+    </div>
 
-<div class="btn-row">
-    <a class="btn btn-primary" href="/cars/<%=car.id%>/edit">Edit</a>
-    
-    <a class="btn btn-primary" href="/companies/<%=car.company.id%>">View Company</a>
-    <%- include('../partials/deleteForm', {url: `/cars/${car.id}`}) %>
+    <div class="car-details-grid">
+        <div class="car-details-label">Company:</div>
+        <div><%=car.company.name%></div>
+        <div class="car-details-label">Release Date:</div>
+        <div><%=car.createdAt.toDateString()%></div>
+        <div class="car-details-label">PS:</div>
+        <div><%=car.PS%></div>
+        <div class="car-details-label">Description:</div>
+        <div><%=car.description%></div>
+    </div>
 
 </div>

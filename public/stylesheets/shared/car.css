@@ -1,0 +1,65 @@
+:root{
+    --car-image-width: 150px;
+    --car-image-width-large: 275px;
+    --car-image-aspect-ratio: 0.75;
+}
+
+.car-image{
+    width: var(--car-image-width);
+    height: var(var(--car-image-width)/ var(--car-image-aspect-ratio));
+}
+
+
+.car-image-large{
+    width: var(--car-image-width-large);
+    height: var(var(--car-image-width)/ var(--car-image-aspect-ratio));
+}
+
+.car-grid {
+    display: grid;
+    justify-content: center;
+    grid-gap: 2rem;
+    grid-template-columns: repeat(auto-fill, var(--car-image-width));
+}
+
+.car-grid-large {
+    grid-template-columns: repeat(auto-fill, var(--car-image-width-large));
+}
+
+.car-details {
+    display: flex;
+    
+
+}
+
+.car-details-label {
+    font-size: 1.2rem;
+    font-weight: 500;
+    align-self: flex-start;
+    margin-left: 2rem;
+}
+
+.car-details-grid {
+    display: grid;
+    align-content: flex-start;
+    align-items: center;
+    grid-gap: 1rem;
+    grid-template-columns: auto auto;
+}
+
+.car-details-btn-grid{
+    display: grid;
+    justify-items: flex-start;
+    align-items: flex-start;
+    align-content: flex-start;
+    grid-template-areas: 
+        "edit delete"
+        "company company";
+    grid-gap: .5rem;
+    margin-top: .5rem;
+}
+
+.car-details-company-button{
+    grid-area: company;
+    justify-self: stretch;
+}

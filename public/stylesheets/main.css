@@ -3,6 +3,8 @@
 @import './shared/header.css';
 @import './shared/variables.css';
 @import './shared/form.css';
+@import './shared/company.css';
+@import './shared/car.css';
 
 :root{
     font-family: 'Montserrat', sans-serif;
@@ -58,3 +60,7 @@ body{
     margin: 2rem;
     margin-left: 1rem;
 } 
+
+.error-message {
+    color: hsl(var(--color-danger-hue), 100%, 50%);
+}

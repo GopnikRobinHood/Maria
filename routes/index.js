@@ -6,43 +6,33 @@ const jwt = require('jsonwebtoken')
 const passport = require('passport')
 const User = require('../models/users')
 const Car = require('../models/cars')
+
 const initializePassport = require('../public/javascripts/passport-config')
 const authenticate = require('../public/javascripts/checkAuthenticated')
 const checkAuthenticated = authenticate.checkAuthenticated
 const checkNotAuthenticated = authenticate.checkNotAuthenticated
+const authRole = require('../public/javascripts/authRole')
 
+//users is not needed
 const { ROLE, users } = require('../public/javascripts/userData')
+
 
 initializePassport(
   passport
 )
 
 
-//Move this to Javascripts
-authRole =function(role, userData){ 
-  return async (req, res, next) => {
-    const id = req.session.passport.user
-    const allUsers = await User.find({}) 
-    //need to load user data like this, else new users are not yet available
-
-    const user = allUsers.find(user => user.id === id)
-    if(role !== user.role){
-      return res.status(403).send('Permission denied!')
-    }
-    next()
-  }
-}
-
-
-router.get('/',checkAuthenticated, async (req, res) => {
-  
+router.get('/',checkAuthenticated, authRole(null), async (req, res) => {
+  showAdmin = req.showAdmin
+  //var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
+  //console.log(ip)
   let cars
   try{
     cars = await Car.find().sort({ createdAt: 'desc'}).limit(3).exec()
   } catch {
     cars = []
   }
-  res.render('index', {cars: cars})
+  res.render('index', {cars: cars, showAdmin : showAdmin})
 })
 
 
@@ -53,8 +43,8 @@ router.get('/users',checkAuthenticated, async (req, res) => {
 })
 
 //Get Admin page
-router.get('/admin',checkAuthenticated, authRole(ROLE.ADMIN, users), async (req, res) => {
-  res.send('Admin')
+router.get('/admin',checkAuthenticated, authRole(ROLE.ADMIN), async (req, res) => {
+  res.render('Admin')
 })
 
 //Get Login page

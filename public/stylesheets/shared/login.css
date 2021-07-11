@@ -1,0 +1,15 @@
+
+
+.login-form{
+    margin: auto;
+    width: 25%;
+    border: 3px solid var(--color-background-light);
+    padding: 10px;
+}
+
+.register-form{
+    margin: auto;
+    width: 40%;
+    border: 3px solid var(--color-background-light);
+    padding: 10px;
+}

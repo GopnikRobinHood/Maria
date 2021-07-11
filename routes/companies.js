@@ -37,7 +37,6 @@ router.post('/', checkAuthenticated, async (req, res) => {
   try {
     const newCompany = await company.save()
     res.redirect(`companies/${company.id}`)
-    //res.redirect(`companies`)
   } catch {
     res.render('companies/new', {
       company: company,
@@ -48,7 +47,6 @@ router.post('/', checkAuthenticated, async (req, res) => {
 
 //Show company
 router.get('/:id', checkAuthenticated, async (req, res) => {
-  //res.send('Show company ' + req.params.id)
   try{
     const company = await Company.findById(req.params.id)
     const cars = await Car.find({company : company.id}).limit(6).exec()
@@ -77,7 +75,6 @@ router.put('/:id', checkAuthenticated, async (req, res) => {
     company = await Company.findById(req.params.id)
     company.name = req.body.name
     await company.save()
-    // res.redirect(`authors/${newAuthor.id}`)
     res.redirect(`/companies/${company.id}`)
   } catch {
     if (company == null){
@@ -98,7 +95,6 @@ router.delete('/:id', checkAuthenticated, async (req, res) => {
   try {
     company = await Company.findById(req.params.id)
     await company.remove()
-    // res.redirect(`authors/${newAuthor.id}`)
     res.redirect('/companies')
   } catch {
     if (company == null){

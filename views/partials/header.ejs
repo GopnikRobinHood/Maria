@@ -2,6 +2,10 @@
     <nav class="header-nav">
       <a class="header-title" href="/">MyCars</a>
       <ul>
+        <% if (showAdmin) { %>
+          <li><a href="/admin">Admin</a></li>
+        <% } %>
+
         <li><a href="/companies">Companies</a></li>
         <li><a href="/companies/new">Add company</a></li>
         <li><a href="/cars">Cars</a></li>

@@ -1,28 +1,32 @@
-<h1>Login</h1>
-<p style="color:red">
-<% if (messages.error) { %> 
-    <%= messages.error  %> 
-    <% } %> </p>
-<form action ="/login" method = "POST">
 
-    <div class="form-row">
-        <div class="form-item">
-            <label for="name">E-Mail:</label>
-            <input type="text" id="email" name="email" required>
+
+<div class="login-form">
+
+    <h2 class="page-header">Login</h2>
+    <p style="color:red">
+    <% if (messages.error) { %> 
+        <%= messages.error  %> 
+        <% } %> </p>
+
+    <form action ="/login" method = "POST"> 
+        <div class="form-row">
+            <div class="form-item">
+                <label for="name">E-Mail:</label>
+                <input type="text" id="email" name="email" required>
+            </div>
         </div>
-    </div>
-    <div class="form-row">
-        <div class="form-item">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+        <div class="form-row">
+            <div class="form-item">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
         </div>
-    </div>
 
-    <div class="btn-row">
-        <button class="btn btn-primary" type="submit">Login</button>
-        <a class="btn btn-primary" href="/register" class="btn btn-primary">Register</a>
-    </div>
-</form>
+        <div class="btn-row">
+            <button class="btn btn-primary" type="submit">Login</button>
+            <a class="btn btn-primary" href="/register" class="btn btn-primary">Register</a>
+        </div>
+    </form>
 
-
+</div>
 

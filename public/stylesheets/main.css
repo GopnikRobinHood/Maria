@@ -5,6 +5,7 @@
 @import './shared/form.css';
 @import './shared/company.css';
 @import './shared/car.css';
+@import './shared/login.css';
 
 :root{
     font-family: 'Montserrat', sans-serif;

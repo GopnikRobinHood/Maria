@@ -29,7 +29,6 @@ async function initialize(passport) {
   passport.use(new LocalStrategy({ usernameField: 'email' }, authenticateUser))
   passport.serializeUser((user, done) => done(null, user.id))
   passport.deserializeUser((id, done) => done(null, findUserById(id)))
-
 }
 
 module.exports = initialize

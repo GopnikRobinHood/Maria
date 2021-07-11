@@ -6,12 +6,14 @@ const jwt = require('jsonwebtoken')
 const passport = require('passport')
 const User = require('../models/users')
 const Car = require('../models/cars')
+const Log = require('../models/log')
 
 const initializePassport = require('../public/javascripts/passport-config')
 const authenticate = require('../public/javascripts/checkAuthenticated')
 const checkAuthenticated = authenticate.checkAuthenticated
 const checkNotAuthenticated = authenticate.checkNotAuthenticated
 const authRole = require('../public/javascripts/authRole')
+const { encrypt, decrypt } = require('../public/javascripts/crypto');
 
 //users is not needed
 const { ROLE, users } = require('../public/javascripts/userData')
@@ -24,8 +26,6 @@ initializePassport(
 
 router.get('/',checkAuthenticated, authRole(null), async (req, res) => {
   showAdmin = req.showAdmin
-  //var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
-  //console.log(ip)
   let cars
   try{
     cars = await Car.find().sort({ createdAt: 'desc'}).limit(3).exec()
@@ -42,10 +42,7 @@ router.get('/users',checkAuthenticated, async (req, res) => {
   res.send(users)
 })
 
-//Get Admin page
-router.get('/admin',checkAuthenticated, authRole(ROLE.ADMIN), async (req, res) => {
-  res.render('Admin')
-})
+
 
 //Get Login page
 router.get('/login',checkNotAuthenticated, async (req, res) => {
@@ -78,21 +75,38 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
 
 //Login
 router.post('/login',checkNotAuthenticated, passport.authenticate('local', {
-  successRedirect: '/',
+  successRedirect: '/redirect',
   failureRedirect: '/login',
   failureFlash: true
 }))
+
+//Successful login to get user role and track activity
+router.get('/redirect',checkAuthenticated, async (req,res) => {
+  
+  const id = req.session.passport.user
+  const allUsers = await User.find({})
+  const user = allUsers.find(user => user.id === id)
+
+  const log = new Log({
+    source: encrypt(req.headers['x-forwarded-for'] || req.socket.remoteAddress).content,
+    userId: user.id,
+    userName: user.name,
+    action: 'Logging-In',
+    name: user.name,
+  })
+  const newLog = await log.save()
+  //it would be useful to get the user role here (user.role == ROLE.ADMIN)
+  res.redirect('/')
+})
 
 //Logout
 router.delete('/logout', async(req, res)=>{
   req.logOut()
   res.redirect('/login')
-  // res.cookie('authorization', 'expired', {httpOnly: true})
 })
 
 //     //Create token
-//     var token = jwt.sign({ _id: user._id, name: user.name, email: user.email }, process.env.ACCES_TOKEN_SECRET, {
-//     expiresIn: '20s' // expires in 24 hours
+//     var token = jwt.sign({ _id: user._id, name: user.name, email: user.email }, process.env.ACCES_TOKEN_SECRET, {expiresIn: '20s'})
     
 
 //Delete User

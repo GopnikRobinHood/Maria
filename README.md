@@ -5,5 +5,4 @@ New Web project called Maria. It consists of a MongoDB database and is  deployed
 ## To Do:
 
 * log site activity
-* adapt css
-* correct date that is displayed on "show cars"
+* adapt css for mobile devices

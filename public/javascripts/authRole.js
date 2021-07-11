@@ -7,7 +7,6 @@ function authRole (role){
       const allUsers = await User.find({}) 
       //need to load user data like this, else new users are not yet available
       const user = allUsers.find(user => user.id === id)
-
       if(user.role == ROLE.ADMIN){
         req.showAdmin = true
       } else {

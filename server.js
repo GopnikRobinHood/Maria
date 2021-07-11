@@ -17,6 +17,7 @@ const session = require('express-session')
 const indexRouter = require('./routes/index')
 const companiesRouter = require('./routes/companies')
 const carsRouter = require('./routes/cars')
+const adminRouter = require('./routes/admin')
 
 //Views
 app.set('view engine', 'ejs')
@@ -48,6 +49,7 @@ db.once('open', () => console.log('Connected to Mongoose'))
 app.use('/', indexRouter)
 app.use('/companies', companiesRouter)
 app.use('/cars', carsRouter)
+app.use('/admin', adminRouter)
 
 //Sever listens to...
 const port = process.env.PORT

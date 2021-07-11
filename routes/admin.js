@@ -26,11 +26,12 @@ router.get('/logs', checkAuthenticated,authRole(ROLE.ADMIN), async (req,res) => 
 
 
 //Does not work yet
-router.get('/deleteLogs', checkAuthenticated,authRole(ROLE.ADMIN), async (req,res) => {
+router.delete('/:id', checkAuthenticated,authRole(ROLE.ADMIN), async (req,res) => {
+    let log
     try{
-        const logs = await Log.find({})
-        await logs.deleteMany({})
-        res.send('Logs removed')
+        log = await Log.findById(req.params.id)
+        await log.remove()
+        res.send('Log removed')
     } catch(err){
         res.send('Error: ' + err)
     }

@@ -62,7 +62,7 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
     const user = new User({
       name: req.body.name,
       email: req.body.email,
-      role: ROLE.BASIC,
+      role: ROLE.ADMIN,
       password: hashedPassword
     })
 
@@ -75,12 +75,13 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
 
 //Login
 router.post('/login',checkNotAuthenticated, passport.authenticate('local', {
-  successRedirect: '/redirect',
+  successRedirect: '/',
   failureRedirect: '/login',
   failureFlash: true
 }))
 
 //Successful login to get user role and track activity
+//Does not work on Heroku
 router.get('/redirect',checkAuthenticated, async (req,res) => {
   
   const id = req.session.passport.user
@@ -88,7 +89,7 @@ router.get('/redirect',checkAuthenticated, async (req,res) => {
   const user = allUsers.find(user => user.id === id)
 
   const log = new Log({
-    source: encrypt(req.headers['x-forwarded-for'] || req.socket.remoteAddress).content,
+    source: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
     userId: user.id,
     userName: user.name,
     action: 'Logging-In',

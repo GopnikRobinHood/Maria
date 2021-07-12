@@ -49,6 +49,10 @@ body{
     margin-bottom: 0;
 }
 
+.text a{
+    color:  var(--color-text-light);
+}
+
 
 .text ul{
     /* display: flex; */

@@ -32,12 +32,12 @@ router.get('/',checkAuthenticated, authRole(null), async (req, res) => {
   } catch {
     cars = []
   }
-  res.render('index', {cars: cars, showAdmin : showAdmin})
+  res.render('index', {cars: cars, user: await req.user, showAdmin : showAdmin})
 })
 
 
 //Get all users
-router.get('/users',checkAuthenticated, async (req, res) => {
+router.get('/users',checkAuthenticated, authRole(ROLE.ADMIN), async (req, res) => {
   const users = await User.find({})
   res.send(users)
 })
@@ -62,8 +62,9 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
     const user = new User({
       name: req.body.name,
       email: req.body.email,
-      role: ROLE.ADMIN,
-      password: hashedPassword
+      role: 'admin',
+      password: hashedPassword,
+      source: req.headers['x-forwarded-for'] || req.socket.remoteAddress
     })
 
     const newUser = await user.save()

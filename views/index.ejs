@@ -1,4 +1,16 @@
-<h2>Recently added</h2>
+<h2 class="page-header">Welcome <%=user.name%></h2>
+<div class="text">
+  This website is a library of different cars. 
+  Under the option "Cars", you can see all cars. 
+  Click on the image of a car to see its properties such as the creator company or creation date. 
+  You can create new cars on the option "Add car".
+  Each car has an attributed company, that you can also create, update and delete. 
+  Get the source code on <a href="https://github.com/GopnikRobinHood/Maria">Github</a>.
+  Enjoy!
+</div>
+<br>
+
+<h2 class="page-header">Recently added</h2>
 
 <div class="home">
     <%- include('partials/carGrid.ejs', {cars: cars, large: true}) %>

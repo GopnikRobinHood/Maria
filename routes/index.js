@@ -62,7 +62,7 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
     const user = new User({
       name: req.body.name,
       email: req.body.email,
-      role: 'admin',
+      role: 'basic',
       password: hashedPassword,
       source: req.headers['x-forwarded-for'] || req.socket.remoteAddress
     })
